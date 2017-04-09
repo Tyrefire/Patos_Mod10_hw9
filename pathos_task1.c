@@ -15,9 +15,11 @@
 void Usage(char *argv[]);
 void ReadFile(char *fname, float num[]);
 FILE *OpenCheckFile(char *name);
+void WriteFile(FILE *sFile, float num[]);
 /* Main Program */
 int main(int argc, char *argv[])
 {
+	float total, avg;
 	float num[30];
 	if(strcmp(argv[1],"--help")==0 || argc != 3)
 	{
@@ -29,6 +31,17 @@ int main(int argc, char *argv[])
 	{
 		printf("awesome\n");
 	}
+	WriteFile(outFile, num);
+	for(int i=0; i<12; i++)
+	{
+		total+=num[i];
+	}
+	avg = total/12;
+	fprintf(outFile, "--------\n\n");
+	fprintf(outFile, "Total:");
+	fprintf(outFile, "%.4f\n\n", total);
+	fprintf(outFile, "Avg:");
+	fprintf(outFile, "%.4f\n", avg);
 	return 0;
 }
 
@@ -64,7 +77,7 @@ void ReadFile(char *fname, float num[])
 
 FILE *OpenCheckFile(char *name)
 {
-	int i;
+	char i;
 	FILE *inFile = fopen(name, "r");
 	if(inFile == NULL)
 	{
@@ -72,9 +85,9 @@ FILE *OpenCheckFile(char *name)
 	}
 	else
 	{
-		printf("would you like to overwrite the output file (y=1 or n=0): ");
-		scanf("%d", &i);
-		if(i == 1)
+		printf("would you like to overwrite the output file (y or n): ");
+		scanf(" %c", &i);
+		if(i == 121)
 		{
 			inFile = fopen(name, "w");
 		}
@@ -84,6 +97,17 @@ FILE *OpenCheckFile(char *name)
 		}
 	}
 	return inFile;
+}
+
+void WriteFile(FILE *sFile, float num[])
+{
+	for(int i=0; i< 12; i++)
+	{
+		fprintf(sFile, "%.4f", num[i]);
+		fprintf(sFile, "\n");
+	}
+	printf("the file has successfully been written\n");
+	return;
 }
 
 
