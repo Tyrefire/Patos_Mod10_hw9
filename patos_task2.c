@@ -17,18 +17,23 @@
 #include <math.h>
 #include <string.h>
 
+#define MAX 4
+
 /* Local Libraries */
 
 
 /* Function Prototypes */
 void Usage(void);
 void ReadFile(char *file, float nums[], float x[], float y[]);
+void Sum(float nums[], float* sum);
 
 /* Main Program */
 int main(int argc, char *argv[])
 {
-	float x[4], y[4], nums[10];
+	float x[MAX], y[MAX], xy[MAX], x2[MAX], nums[10];
 	float sumx = 0.0, sumy = 0.0, sumxy = 0.0, sumx2 = 0.0;
+	float m, b;
+	int sum2x;
 
 	if(argc != 2)
 	{
@@ -37,10 +42,24 @@ int main(int argc, char *argv[])
 
 	ReadFile(argv[1], nums, x, y);
 
-	for(int i = 0; i < 4; i++)
+	for(int i = 0; i < MAX; i++)
 	{
-		printf("x[%d] = %.2f, y[%d] = %.2f\n", i, x[i], i, y[i]);
+		xy[i] = (x[i] * y[i]);
+		x2[i] = (x[i] * x[i]);
 	}
+
+	Sum(x, &sumx);
+	Sum(y, &sumy);
+	Sum(xy, &sumxy);
+	Sum(x2, &sumx2);
+
+	sum2x = (sumx * sumx);
+	m = (((sumx * sumy) - (MAX * sumxy)) / (sum2x - (MAX * sumx2)));
+	b = (((sumx * sumxy) - (sumx2 * sumy)) / (sum2x - (MAX * sumx2)));
+
+	printf("Range of altitudes in km:\n%.2f to %.2f\n\n", x[0], x[MAX - 1]);
+	printf("Linear model:");
+	printf("ozone-mix-ratio = %.2f altitude + %.2f\n", m, b);
 
 	return 0;
 }
@@ -88,4 +107,13 @@ void ReadFile(char *file, float nums[], float x[], float y[])
 	return;
 }
 
+void Sum(float nums[], float* sum)
+{
+	for(int i = 0; i < MAX; i++)
+	{
+		(*sum) += nums[i];
+	}
+
+	return;
+}
 
